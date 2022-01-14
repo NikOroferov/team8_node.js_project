@@ -1,8 +1,6 @@
 {
   "name": "team8_node.js_project",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
   "scripts": {
     "start": "cross-env NODE_ENV=production node ./bin/server.js",
     "start:dev": "cross-env NODE_ENV=development nodemon ./bin/server.js",
@@ -31,6 +29,21 @@
     "mongoose": "^6.1.6",
     "morgan": "^1.10.0",
     "multer": "^1.4.4",
-    "nodemon": "^2.0.15"
+    "@sendgrid/mail": "^7.6.0",
+    "bcryptjs": "^2.4.3",
+    "cross-env": "7.0.3",
+    "gravatar": "^1.8.2",
+    "jimp": "^0.16.1",
+    "nanoid": "^3.1.30"
+  },
+  "devDependencies": {
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-config-standard": "^16.0.2",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "jest": "^27.4.5",
+    "nodemon": "2.0.15"
   }
 }
