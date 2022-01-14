@@ -21,10 +21,10 @@ const userSchema = Schema(
       type: String,
       required: true,
     },
-    balance: {
-      type: Number,
-      required: true,
-    },
+    // balance: {
+    //   type: Number,
+    //   required: true,
+    // },
     verify: {
       type: Boolean,
       default: false,
