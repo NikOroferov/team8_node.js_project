@@ -1,7 +1,7 @@
 const express = require('express');
 const logger = require('morgan');
 const cors = require('cors');
-require('dotenv').config;
+require('dotenv').config();
 
 const authRouter = require('./routes/api/auth');
 const usersRouter = require('./routes/api/users');
@@ -25,10 +25,7 @@ app.use((req, res) => {
 });
 
 app.use((err, req, res, next) => {
-  const { status = 500, message = 'Server error' } = err;
-  res.status(status).json({
-    message: err.message,
-  });
+  res.status(500).json({ message: err.message });
 });
 
 module.exports = app;
