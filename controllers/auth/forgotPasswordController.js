@@ -6,4 +6,4 @@ const forgotPasswordController = async (req, res) => {
   res.json({ status: 'succes' });
 };
 
-module.exports = forgotPasswordController;
+module.exports = { forgotPasswordController };

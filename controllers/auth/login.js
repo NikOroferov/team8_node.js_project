@@ -24,6 +24,8 @@ const login = async (req, res) => {
       token,
       user: {
         email: user.email,
+        id: user._id,
+        balance: user.balance,
       },
     },
   });
