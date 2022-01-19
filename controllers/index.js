@@ -5,4 +5,5 @@ const transactions = require('./transactions');
 module.exports = {
   auth,
   users,
+  transactions,
 };

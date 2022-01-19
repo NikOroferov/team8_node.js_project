@@ -39,7 +39,13 @@ const addExpenseTransaction = async (req, res) => {
   };
 
   const result = await Transaction.create(newTransaction);
-  sendSuccessResponse(res, { result }, 201);
+  res.status(201).json({
+    status: 'succes',
+    code: 201,
+    data: {
+      result,
+    },
+  });
 };
 
 module.exports = addExpenseTransaction;
