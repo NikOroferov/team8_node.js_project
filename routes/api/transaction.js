@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { transactions: ctrl } = require('../../controllers');
 const { ctrlWrapper, validation, auth } = require('../../middlewares');
-const { transactionsSchemaJoi } = require('../../models/transactions');
+const { transactionsSchemaJoi } = require('../../models/transaction');
 
 router.get('/expense', auth, ctrlWrapper(ctrl.getExpenseTransactions));
 router.get('/income', auth, ctrlWrapper(ctrl.getIncomeTransactions));
