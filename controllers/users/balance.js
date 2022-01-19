@@ -7,7 +7,7 @@ const balance = async (req, res, next) => {
     const { balance } = req.body;
     const updateBalanceUser = await User.findByIdAndUpdate(
       _id,
-      { balance },
+      { balance: balance },
       { new: true },
     );
     if (!updateBalanceUser) {
@@ -15,8 +15,6 @@ const balance = async (req, res, next) => {
     }
     res.json({
       user: {
-        email: updateBalanceUser.email,
-        name: updateBalanceUser.name,
         balance: updateBalanceUser.balance,
       },
     });
