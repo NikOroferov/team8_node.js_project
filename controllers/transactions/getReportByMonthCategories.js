@@ -1,4 +1,4 @@
-const { Transaction } = require('../../models/transaction')
+const { Transaction } = require('../../models')
 
 const getReportByMonthCategories = async (req, res, next) => {
     const { _id } = req.user
