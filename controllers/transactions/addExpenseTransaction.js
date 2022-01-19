@@ -22,7 +22,6 @@ const addExpenseTransaction = async (req, res) => {
   const typeTransaction = typeOfOperation === false ? 'Expenses' : 'Incomes';
 
   const newTransaction = {
-    // ...req.body,
     date: {
       day,
       month,

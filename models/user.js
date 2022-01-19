@@ -29,7 +29,6 @@ const userSchema = Schema(
     },
     balance: {
       type: Number,
-      required: true,
       default: 0,
     },
     verify: {
@@ -49,7 +48,9 @@ const userSchema = Schema(
 );
 
 userSchema.methods.setPassword = function (password) {
-  this.password = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
+  if (this.isNew || this.isModified) {
+    this.password = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
+  }
 };
 
 userSchema.methods.comparePassword = function (password) {
@@ -58,10 +59,8 @@ userSchema.methods.comparePassword = function (password) {
 };
 
 const joiUserSchema = Joi.object({
-  name: Joi.string().required(),
   email: Joi.string().required(),
   password: Joi.string().min(6).required(),
-  balance: Joi.number().required(),
 });
 
 const User = model('user', userSchema);

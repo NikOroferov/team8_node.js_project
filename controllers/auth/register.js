@@ -7,7 +7,7 @@ const { User } = require('../../models');
 const { PORT } = process.env;
 
 const register = async (req, res) => {
-  const { email, password } = req.body;
+  const { name, email, password } = req.body;
   const user = await User.findOne({ email });
   if (user) {
     throw new Conflict(`${email} in use`);
@@ -16,6 +16,7 @@ const register = async (req, res) => {
   const verificationToken = nanoid();
   const newUser = new User({
     ...req.body,
+    name,
     verificationToken,
     avatarURL,
   });
@@ -33,6 +34,7 @@ const register = async (req, res) => {
     status: 'succes',
     code: 201,
     data: {
+      name: newUser.name,
       avatarURL: newUser.avatarURL,
       email: newUser.email,
       verificationToken: newUser.verificationToken,
