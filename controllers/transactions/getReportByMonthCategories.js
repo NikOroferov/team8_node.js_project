@@ -1,16 +1,22 @@
 const { Transaction } = require('../../models/transaction')
 
-const reportByMonthCategory = async (req, res, next) => {
+const getReportByMonthCategories = async (req, res, next) => {
     const { _id } = req.user
-    const { date, isIncome } = req.body
 
+    let { date = '202201', isIncome } = req.query
+
+    if (isIncome === 'true') {
+      isIncome = true
+    } else if (isIncome === 'false') {
+      isIncome = false
+    }
 
     const agg = [
       {
         $project: {
           date: {
             $dateToString: {
-              format: '%m-%Y',
+              format: '%Y%m',
               date: '$created_at'
             }
           },
@@ -59,7 +65,7 @@ const reportByMonthCategory = async (req, res, next) => {
         result,
         neededDay
       }
-    }) 
+    })
 }
 
-module.exports = reportByMonthCategory
+module.exports = getReportByMonthCategories

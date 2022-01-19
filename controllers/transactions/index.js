@@ -3,10 +3,10 @@ const deleteTransaction = require('./deleteTransaction');
 const addIncomTransaction = require('./addIncomTransaction');
 const getExpenseTransactions = require('./getExpenseTransactions');
 const getIncomeTransactions = require('./getIncomeTransactions');
-const reportByMonthCategory = require('./reportByMonthCategory');
+const getReportByMonthCategories = require('./getReportByMonthCategories');
 
 module.exports = {
-  reportByMonthCategory,
+  getReportByMonthCategories,
   addExpenseTransaction,
   deleteTransaction,
   addIncomTransaction,
