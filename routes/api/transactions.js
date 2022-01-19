@@ -1,47 +1,31 @@
 const express = require('express');
 const router = express.Router();
 const { transactions: ctrl } = require('../../controllers');
-const {
-  controllerWrapper,
-  validation,
-  authenticate,
-} = require('../../middlewares');
+const { ctrlWrapper, validation, auth } = require('../../middlewares');
 const { transactionsSchemaJoi } = require('../../models/transactions');
 
-router.get(
-  '/expense',
-  authenticate,
-  controllerWrapper(ctrl.getExpenseTransactions),
-);
-router.get(
-  '/income',
-  authenticate,
-  controllerWrapper(ctrl.getIncomeTransactions),
-);
+router.get('/expense', auth, ctrlWrapper(ctrl.getExpenseTransactions));
+router.get('/income', auth, ctrlWrapper(ctrl.getIncomeTransactions));
 
 router.post(
   '/expense/:categoryId',
-  authenticate,
+  auth,
   validation(transactionsSchemaJoi),
-  controllerWrapper(ctrl.addExpenseTransaction),
+  ctrlWrapper(ctrl.addExpenseTransaction),
 );
-router.delete(
-  '/:transactionId',
-  authenticate,
-  controllerWrapper(ctrl.deleteTransaction),
-);
+router.delete('/:transactionId', auth, ctrlWrapper(ctrl.deleteTransaction));
 
 router.post(
   '/income/:categoryId',
-  authenticate,
+  auth,
   validation(transactionsSchemaJoi),
-  controllerWrapper(ctrl.addIncomTransaction),
+  ctrlWrapper(ctrl.addIncomTransaction),
 );
 
 router.get(
   '/category-by-month',
-  authenticate,
-  controllerWrapper(ctrl.getReportByMonthCategories),
+  auth,
+  ctrlWrapper(ctrl.getReportByMonthCategories),
 );
 
 module.exports = router;
