@@ -6,11 +6,19 @@
     "description": "Description of KAPUSTA API",
     "license": {}
   },
-  "consumes": ["application/json"],
-  "produces": ["application/json"],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
   "servers": [
-    { "url": "http://localhost:3000" },
-    { "url": "https://kapusta-finance-tracker.herokuapp.com/" }
+    {
+      "url": "http://localhost:3001"
+    },
+    {
+      "url": "https://kapusta-finance-tracker.herokuapp.com/"
+    }
   ],
   "tags": [
     {
@@ -33,11 +41,11 @@
   "paths": {
     "/api/user/signup": {
       "post": {
-        "tags": ["Users"],
+        "tags": [
+          "Users"
+        ],
         "summary": "User registration",
-
         "parameters": [],
-
         "requestBody": {
           "description": "Registration's object",
           "required": true,
@@ -65,9 +73,10 @@
     },
     "/api/user/verify": {
       "get": {
-        "tags": ["Users"],
+        "tags": [
+          "Users"
+        ],
         "summary": "User verification",
-
         "parameters": [
           {
             "type": "string",
@@ -76,7 +85,6 @@
             "example": "56qhj124786qjhdayutjhkdsfu87sd6rwjk.djhjhd"
           }
         ],
-
         "responses": {
           "200": {
             "description": "Successful operation",
@@ -93,11 +101,11 @@
     },
     "/api/user/login": {
       "post": {
-        "tags": ["Users"],
+        "tags": [
+          "Users"
+        ],
         "summary": "User login",
-
         "parameters": [],
-
         "requestBody": {
           "description": "Login's object",
           "required": true,
@@ -125,13 +133,16 @@
     },
     "/api/user/logout": {
       "get": {
-        "tags": ["Users"],
+        "tags": [
+          "Users"
+        ],
         "summary": "User logout",
-
         "parameters": [],
-
-        "security": [{ "Bearer": [] }],
-
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful operation",
@@ -148,10 +159,16 @@
     },
     "/api/user/current": {
       "get": {
-        "tags": ["Users"],
+        "tags": [
+          "Users"
+        ],
         "summary": "Current user",
         "parameters": [],
-        "security": [{ "Bearer": [] }],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
         "responses": {
           "201": {
             "description": "Successful operation",
@@ -168,10 +185,16 @@
     },
     "/api/user/balance": {
       "get": {
-        "tags": ["Users"],
+        "tags": [
+          "Users"
+        ],
         "summary": "Get curent user balance",
         "parameters": [],
-        "security": [{ "Bearer": [] }],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful operation",
@@ -186,11 +209,16 @@
         }
       },
       "post": {
-        "tags": ["Users"],
+        "tags": [
+          "Users"
+        ],
         "summary": "Add curent user balance",
         "parameters": [],
-        "security": [{ "Bearer": [] }],
-
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
         "requestBody": {
           "description": "Add user's balance",
           "required": true,
@@ -202,7 +230,6 @@
             }
           }
         },
-
         "responses": {
           "200": {
             "description": "Successful operation",
@@ -217,10 +244,16 @@
         }
       },
       "patch": {
-        "tags": ["Users"],
+        "tags": [
+          "Users"
+        ],
         "summary": "Update  curent user balance",
         "parameters": [],
-        "security": [{ "Bearer": [] }],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful operation",
@@ -237,9 +270,10 @@
     },
     "/api/transactions/expense/{categoryId}": {
       "post": {
-        "tags": ["Transactions"],
+        "tags": [
+          "Transactions"
+        ],
         "summary": "Add user expense transaction ",
-
         "parameters": [
           {
             "in": "path",
@@ -270,9 +304,11 @@
             "description": "day of transaction"
           }
         ],
-
-        "security": [{ "Bearer": [] }],
-
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
         "requestBody": {
           "description": "Registration's object",
           "required": true,
@@ -300,7 +336,9 @@
     },
     "/api/transacrions/income/{categoryId}": {
       "post": {
-        "tags": ["Transactions"],
+        "tags": [
+          "Transactions"
+        ],
         "summary": "Add user's income transaction ",
         "parameters": [
           {
@@ -332,7 +370,11 @@
             "description": "day of transaction"
           }
         ],
-        "security": [{ "Bearer": [] }],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
         "requestBody": {
           "description": "Registration's object",
           "required": true,
@@ -360,7 +402,9 @@
     },
     "/api/transacrions/{transactionId}": {
       "delete": {
-        "tags": ["Transactions"],
+        "tags": [
+          "Transactions"
+        ],
         "summary": "Delete transaction by ",
         "patametres": [
           {
@@ -371,7 +415,11 @@
             "description": "Transaction category Id"
           }
         ],
-        "security": [{ "Bearer": [] }],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
         "requestBody": {},
         "responses": {
           "200": {
@@ -389,10 +437,16 @@
     },
     "/api/transactions/expense": {
       "get": {
-        "tags": ["Transactions"],
+        "tags": [
+          "Transactions"
+        ],
         "summary": "Get expense transaction ",
         "parameters": [],
-        "security": [{ "Bearer": [] }],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful operation",
@@ -409,10 +463,16 @@
     },
     "/api/transaction/income": {
       "get": {
-        "tags": ["Transactions"],
+        "tags": [
+          "Transactions"
+        ],
         "summary": "Get income transaction",
         "parameters": [],
-        "security": [{ "Bearer": [] }],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful operation",
@@ -429,7 +489,9 @@
     },
     "/api/reports/monthlyexpense": {
       "get": {
-        "tags": ["Reports"],
+        "tags": [
+          "Reports"
+        ],
         "summary": "Monthly expense reports",
         "parameters": [
           {
@@ -447,7 +509,11 @@
             "description": "year of transaction"
           }
         ],
-        "security": [{ "Bearer": [] }],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
         "requestBody": {},
         "responses": {
           "200": {
@@ -463,7 +529,9 @@
     },
     "/api/reports/monthlyincome": {
       "get": {
-        "tags": ["Reports"],
+        "tags": [
+          "Reports"
+        ],
         "summary": "Monthly income reports",
         "parameters": [
           {
@@ -481,7 +549,11 @@
             "description": "year of transaction"
           }
         ],
-        "security": [{ "Bearer": [] }],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
         "requestBody": {},
         "responses": {
           "200": {}
@@ -490,7 +562,9 @@
     },
     "/api/reports/expense": {
       "get": {
-        "tags": ["Reports"],
+        "tags": [
+          "Reports"
+        ],
         "summary": "Expense reports by year",
         "parameters": [
           {
@@ -501,7 +575,11 @@
             "description": "year of transaction"
           }
         ],
-        "security": [{ "Bearer": [] }],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
         "requestBody": {},
         "responses": {
           "200": {
@@ -519,7 +597,9 @@
     },
     "/api/reports/income": {
       "get": {
-        "tags": ["Reports"],
+        "tags": [
+          "Reports"
+        ],
         "summary": "Income reports by year",
         "parameters": [
           {
@@ -530,7 +610,11 @@
             "description": "year of transaction"
           }
         ],
-        "security": [{ "Bearer": [] }],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
         "requestBody": {},
         "responses": {
           "200": {}
@@ -539,11 +623,12 @@
     },
     "/api/categories": {
       "get": {
-        "tags": ["Categories"],
+        "tags": [
+          "Categories"
+        ],
         "summary": "Get all categories",
         "parameters": [],
         "security": [],
-
         "responses": {
           "200": {
             "description": "All categories",
@@ -560,22 +645,27 @@
     },
     "/api/categories/expense": {
       "get": {
-        "tags": ["Categories"],
+        "tags": [
+          "Categories"
+        ],
         "summary": "Get expense categories",
         "parameters": [],
         "security": [],
-
         "responses": {
           "200": {}
         }
       },
       "post": {
-        "tags": ["Categories"],
+        "tags": [
+          "Categories"
+        ],
         "summary": "Add new expense category",
         "parameters": [],
-
-        "security": [{ "Bearer": [] }],
-
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
         "requestBody": {
           "description": "New category object",
           "required": true,
@@ -603,20 +693,27 @@
     },
     "/api/categories/income": {
       "get": {
-        "tags": ["Categories"],
+        "tags": [
+          "Categories"
+        ],
         "summary": "Get income categories",
         "parameters": [],
         "security": [],
-
         "responses": {
           "200": {}
         }
       },
       "post": {
-        "tags": ["Categories"],
+        "tags": [
+          "Categories"
+        ],
         "summary": "Add new income category",
         "parameters": [],
-        "security": [{ "Bearer": [] }],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
         "requestBody": {
           "description": "New category object",
           "required": true,
@@ -647,7 +744,11 @@
     "schemas": {
       "RegistrationRequest": {
         "type": "object",
-        "required": ["name", "email", "password"],
+        "required": [
+          "name",
+          "email",
+          "password"
+        ],
         "properties": {
           "name": {
             "type": "string",
@@ -684,7 +785,6 @@
             "example": "56qhj124786qjhdayutjhkdsfu87sd6rwjk.djhjhd"
           }
         },
-
         "example": {
           "status": "success",
           "code": 200,
@@ -698,7 +798,6 @@
       "VerifyResponse": {
         "type": "object",
         "properties": {},
-
         "example": {
           "status": "success",
           "code": 200,
@@ -709,7 +808,10 @@
       },
       "LoginRequest": {
         "type": "object",
-        "required": ["email", "password"],
+        "required": [
+          "email",
+          "password"
+        ],
         "properties": {
           "email": {
             "type": "string",
@@ -805,7 +907,6 @@
             }
           }
         },
-
         "example": {
           "status": "success",
           "code": 201,
@@ -839,7 +940,9 @@
       },
       "AddCurentUserBalanceRequest": {
         "type": "object",
-        "required": ["balance"],
+        "required": [
+          "balance"
+        ],
         "properties": {
           "balance": {
             "type": "number",
@@ -850,7 +953,10 @@
       },
       "AddTransactionRequest": {
         "type": "object",
-        "required": ["description", "value"],
+        "required": [
+          "description",
+          "value"
+        ],
         "properties": {
           "description": {
             "type": "string",
@@ -1008,7 +1114,6 @@
             }
           }
         },
-
         "example": {
           "status": "success",
           "code": 200,
@@ -1104,7 +1209,9 @@
       },
       "AddCategoryRequest": {
         "type": "object",
-        "required": ["name"],
+        "required": [
+          "name"
+        ],
         "properties": {
           "name": {
             "type": "string",
@@ -1132,7 +1239,6 @@
         }
       }
     },
-
     "securitySchemes": {
       "Bearer": {
         "type": "http",
