@@ -21,10 +21,10 @@ const transactionSchema = Schema({
       'Дополнительные доходы',
     ],
   },
-  // subcategory: {
-  //   type: String,
-  //   required: true,
-  // },
+  subcategory: {
+    type: String,
+    required: true,
+  },
   transactionType: {
     type: String,
     required: true,

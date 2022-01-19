@@ -13,7 +13,13 @@ const getIncomeTransactions = async (req, res) => {
     throw new NotFound('There are no transactions');
   }
 
-  sendSuccessResponse(res, { transactions });
+  res.status(201).json({
+    status: 'succes',
+    code: 201,
+    data: {
+      transactions,
+    },
+  });
 };
 
 module.exports = getIncomeTransactions;

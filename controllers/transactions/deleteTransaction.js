@@ -1,4 +1,4 @@
-const { NotFound } = require('http-errors');
+const { NotFound, BadRequest } = require('http-errors');
 const { User } = require('../../models');
 const { Transaction } = require('../../models');
 
@@ -27,9 +27,13 @@ const deleteTransaction = async (req, res) => {
     { new: true },
   );
 
-  sendSuccessResponse(res, {
-    message: 'Success remove',
-    balance: updateBalance,
+  res.status(201).json({
+    status: 'succes',
+    code: 201,
+    data: {
+      message: 'Success remove',
+      balance: updateBalance,
+    },
   });
 };
 
