@@ -38,4 +38,10 @@ router.post(
   controllerWrapper(ctrl.addIncomTransaction),
 );
 
+router.get(
+  '/category-by-month',
+  authenticate,
+  controllerWrapper(ctrl.getReportByMonthCategories),
+);
+
 module.exports = router;
