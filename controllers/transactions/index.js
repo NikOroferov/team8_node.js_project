@@ -1,4 +1,4 @@
-const getAllTransaction = require('./getAllTransaction.js');
+const getAllTransactions = require('./getAllTransactions.js');
 const addTransaction = require('./addTransaction.js');
 const deleteTransaction = require('./deleteTransaction');
 
@@ -11,7 +11,7 @@ const getReportByMonthSubcategories = require('./getReportByMonthSubcategories')
 // const getIncomeTransactions = require('./getIncomeTransactions');
 
 module.exports = {
-  getAllTransaction,
+  getAllTransactions,
   addTransaction,
   deleteTransaction,
   getReportByMonthCategories,
