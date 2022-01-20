@@ -23,9 +23,15 @@ router.post(
 );
 
 router.get(
-  '/category-by-month',
+  '/category-by-month', // подправить рут
   auth,
   ctrlWrapper(ctrl.getReportByMonthCategories),
+);
+
+router.get(
+  '/subcategory-by-month',
+  auth,
+  ctrlWrapper(ctrl.getReportByMonthSubcategories),
 );
 
 module.exports = router;

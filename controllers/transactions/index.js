@@ -4,6 +4,7 @@ const addIncomTransaction = require('./addIncomTransaction');
 const getExpenseTransactions = require('./getExpenseTransactions');
 const getIncomeTransactions = require('./getIncomeTransactions');
 const getReportByMonthCategories = require('./getReportByMonthCategories');
+const getReportByMonthSubcategories = require('./getReportByMonthSubcategories')
 
 module.exports = {
   getReportByMonthCategories,
@@ -12,4 +13,5 @@ module.exports = {
   addIncomTransaction,
   getExpenseTransactions,
   getIncomeTransactions,
+  getReportByMonthSubcategories
 };
