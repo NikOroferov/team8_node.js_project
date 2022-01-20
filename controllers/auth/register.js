@@ -26,7 +26,7 @@ const register = async (req, res) => {
   const mail = {
     to: email,
     subject: 'Email confirmation',
-    html: `<a target="_blank" href="http://localhost:${PORT}/api/users/verify/${verificationToken}">Confirm email</a>`,
+    html: `<a target="_blank" href="http://localhost:${PORT}/api/users/verify/${verificationToken}">Welcome to our KapuSta app! To continue working, please confirm your registration${email}</a>`,
   };
   await sendEmail(mail);
 
@@ -34,7 +34,7 @@ const register = async (req, res) => {
     status: 'succes',
     code: 201,
     data: {
-      name: newUser.name,
+      name: newUser.name || newUser.email,
       avatarURL: newUser.avatarURL,
       email: newUser.email,
       verificationToken: newUser.verificationToken,
