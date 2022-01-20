@@ -34,7 +34,7 @@ const register = async (req, res) => {
     status: 'succes',
     code: 201,
     data: {
-      name: newUser.name,
+      name: newUser.name || newUser.email,
       avatarURL: newUser.avatarURL,
       email: newUser.email,
       verificationToken: newUser.verificationToken,
