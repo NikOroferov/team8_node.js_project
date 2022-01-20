@@ -1,14 +1,14 @@
 const { NotFound, BadRequest } = require('http-errors');
 const { Transaction } = require('../../models');
-// const { Category } = require('../../models');
+const { Category } = require('../../models');
 
 const addTransaction = async (req, res) => {
   const { _id } = req.user;
   const { categoryId } = req.params;
-  const { created_at, subcategory, category, transactionType, costs, incomes } =
+  const { date, subcategory, category, transactionType, costs, incomes } =
     req.body;
 
-  const category = await Category.findById({ _id: categoryId });
+  const categoryName = await Category.findById({ _id: categoryId });
 
   // if (!balance) {
   //   throw new BadRequest('There are no money on your balance');
@@ -22,7 +22,7 @@ const addTransaction = async (req, res) => {
   // const typeTransaction = typeOfOperation === false ? 'Expenses' : 'Incomes';
 
   const newTransaction = {
-    created_at,
+    created_at: date,
     subcategory,
     category,
     transactionType,
