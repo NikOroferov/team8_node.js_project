@@ -3,6 +3,7 @@ const login = require('./login');
 const googleLogin = require('./googleLogin');
 const logout = require('./logout');
 const forgotPasswordController = require('./forgotPasswordController');
+// const google = require('./google');
 
 module.exports = {
   register,
@@ -10,4 +11,5 @@ module.exports = {
   logout,
   forgotPasswordController,
   googleLogin,
+  // google,
 };

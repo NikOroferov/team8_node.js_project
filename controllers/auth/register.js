@@ -1,8 +1,8 @@
 const { Conflict } = require('http-errors');
 const gravatar = require('gravatar');
-const { nanoid } = require('nanoid');
 const { sendEmail } = require('../../helpers');
 const { User } = require('../../models');
+const sha256 = require('sha256');
 
 const { PORT } = process.env;
 
@@ -13,7 +13,9 @@ const register = async (req, res) => {
     throw new Conflict(`${email} in use`);
   }
   const avatarURL = gravatar.url(email);
-  const verificationToken = nanoid();
+  const verificationToken = sha256(Date.now() + process.env.SECRET_KEY, {
+    expiresIn: '1d',
+  });
   const newUser = new User({
     ...req.body,
     name,
@@ -26,7 +28,7 @@ const register = async (req, res) => {
   const mail = {
     to: email,
     subject: 'Email confirmation',
-    html: `<a target="_blank" href="http://localhost:${PORT}/api/users/verify/${verificationToken}">Welcome to our KapuSta app! To continue working, please confirm your registration${email}</a>`,
+    html: `<a target="_blank" href="http://localhost:${PORT}/api/users/verify/${verificationToken}">Welcome to our KapuSta app! To continue working, please confirm your registration <b>${email}</b></a>`,
   };
   await sendEmail(mail);
 
