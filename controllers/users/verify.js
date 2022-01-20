@@ -8,7 +8,6 @@ const verify = async (req, res) => {
   }
   await User.findByIdAndUpdate(user._id, {
     verify: true,
-    verificationToken: null,
   });
   res.json({
     message: 'Verification successful',
