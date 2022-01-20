@@ -8,6 +8,7 @@ const userSchema = Schema(
     email: {
       type: String,
       required: [true, 'Email is required'],
+      lowercase: true,
       unique: true,
       validate: value => value.includes('@'),
     },
@@ -45,13 +46,13 @@ const userSchema = Schema(
 );
 
 userSchema.methods.setPassword = function (password) {
-  // if (this.isNew || this.isModified) {
-  this.password = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
-  // }
+  if (this.isNew || this.isModified) {
+    this.password = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
+  }
 };
 
 userSchema.methods.comparePassword = function (password) {
-  // if (!password || !this.password) return false;
+  if (!password || !this.password) return false;
   return bcrypt.compareSync(password, this.password);
 };
 

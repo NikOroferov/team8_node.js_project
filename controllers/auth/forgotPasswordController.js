@@ -1,7 +1,12 @@
 const { User } = require('../../models');
-const { sendEmail } = require('../../helpers');
 const { Unauthorized } = require('http-errors');
 const sha256 = require('sha256');
+const sgMail = require('@sendgrid/mail');
+require('dotenv').config();
+
+const { SENDGRID_API_KEY, Email } = process.env;
+
+sgMail.setApiKey(SENDGRID_API_KEY);
 
 const forgotPasswordController = async (req, res) => {
   const { email } = req.body;
@@ -9,19 +14,21 @@ const forgotPasswordController = async (req, res) => {
   if (!user) {
     throw new Unauthorized(`No user with email '${email}' found`);
   }
-  const password = sha256(Date.now() + process.env.SECRET_KEY);
+  const password = sha256(Date.now() + process.env.SECRET_KEY, {
+    expiresIn: '1d',
+  });
   user.password = password;
 
   await user.save();
 
-  const mail = {
+  const sendEmail = {
     to: user.email,
-    from: email,
+    from: Email,
     subject: 'Forgot password!',
-    text: `Here is your temporary password: ${password}`,
-    html: `Here is your temporary password: ${password}`,
+    text: `Here is your temporary password: <b>${password}</b>`,
+    html: `Here is your temporary password: <b>${password}</b>`,
   };
-  await sendEmail.send(mail);
+  await sgMail.send(sendEmail);
   res.json({ status: 'succes' });
 };
 
