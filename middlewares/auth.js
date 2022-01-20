@@ -2,7 +2,7 @@ const { Unautorized } = require('http-errors');
 const jwt = require('jsonwebtoken');
 const { User } = require('../models');
 
-const { SECRET_KEY } = process.env;
+const { SECRET_KEY, GOOGLE_CLIENT_SECRET } = process.env;
 
 const auth = async (req, res, next) => {
   const { authorization = '' } = req.headers;
@@ -14,7 +14,7 @@ const auth = async (req, res, next) => {
     if (bearer !== 'Bearer') {
       throw new Unautorized('Not authorized');
     }
-    const { id } = jwt.verify(token, SECRET_KEY);
+    const { id } = jwt.decode(token, SECRET_KEY || GOOGLE_CLIENT_SECRET);
     const user = await User.findById(id);
     if (!user || !user.token || user.token !== token) {
       throw new Unautorized('Not authorized');

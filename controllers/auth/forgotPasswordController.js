@@ -24,9 +24,9 @@ const forgotPasswordController = async (req, res) => {
   const sendEmail = {
     to: user.email,
     from: Email,
-    subject: 'Forgot password!',
-    text: `Here is your temporary password: <b>${password}</b>`,
-    html: `Here is your temporary password: <b>${password}</b>`,
+    subject: 'Your forgotten password from KapuSta!',
+    text: `Please your temporary password from the KapuSta app: <b>${password}</b>`,
+    html: `Please your temporary password from the KapuSta app: <b>${password}</b>`,
   };
   await sgMail.send(sendEmail);
   res.json({ status: 'succes' });
