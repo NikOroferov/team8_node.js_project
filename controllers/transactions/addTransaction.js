@@ -1,33 +1,35 @@
-const { NotFound, BadRequest } = require('http-errors');
+const { NotFound } = require('http-errors');
 const { Transaction } = require('../../models');
 const { Category } = require('../../models');
 
 const addTransaction = async (req, res) => {
   const { _id } = req.user;
-  const { categoryId } = req.params;
-  const { date, subcategory, category, transactionType, costs, incomes } =
-    req.body;
+  
+  const { created_at, subcategory, category, transactionType, costs, incomes, year, month, day } =
+  req.body;
 
-  const categoryName = await Category.findById({ _id: categoryId });
+  const categoryInfo = await Category.findOne({ category });
 
-  // if (!balance) {
-  //   throw new BadRequest('There are no money on your balance');
-  // }
+  if (!categoryInfo) {
+    throw new NotFound('Category is not found');
+  }
 
-  // if (!category) {
-  //   throw new NotFound('Category not found');
-  // }
-
-  // const { name, typeOfOperation, icon } = category;
-  // const typeTransaction = typeOfOperation === false ? 'Expenses' : 'Incomes';
+  const { alias, icon } = categoryInfo;
 
   const newTransaction = {
-    created_at: date,
+    created_at,
     subcategory,
     category,
     transactionType,
     costs,
     incomes,
+    alias,
+    icon,
+    date: {
+      year, 
+      month, 
+      day,
+    },
     owner: _id,
   };
 

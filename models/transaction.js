@@ -5,21 +5,21 @@ const transactionSchema = Schema({
   category: {
     type: String,
     required: [true, 'Select a category'],
-    enum: [
-      'Продукты',
-      'Алкоголь',
-      'Развлечения',
-      'Здоровье',
-      'Транспорт',
-      'Всё для дома',
-      'Техника',
-      'Коммуналка, связь',
-      'Спорт, хобби',
-      'Образование',
-      'Прочее',
-      'ЗП',
-      'Дополнительные доходы',
-    ],
+    // enum: [
+    //   'продукты',
+    //   'алкоголь',
+    //   'развлечения',
+    //   'здоровье',
+    //   'транспорт',
+    //   'всё для дома',
+    //   'техника',
+    //   'коммуналка, связь',
+    //   'спорт, хобби',
+    //   'образование',
+    //   'прочее',
+    //   'зп',
+    //   'дополнительные доходы',
+    // ],
   },
   subcategory: {
     type: String,
@@ -42,23 +42,38 @@ const transactionSchema = Schema({
     type: Boolean,
     default: true,
   },
+  alias: {
+    type: String
+  },
+  icon: {
+    type: String
+  },
+  date: {
+    type: Object
+  },
   owner: {
     type: Schema.Types.ObjectId,
     ref: 'user',
     required: true,
-  },
+  }
 });
 
 const joiTransactionSchema = Joi.object({
   created_at: Joi.string().required(),
   category: Joi.string().required(),
   transactionType: Joi.string().required(),
-});
+  subcategory: Joi.string().required(),
+  costs: Joi.number().required(),
+  incomes: Joi.boolean().required(),
+  year: Joi.number(),
+  month: Joi.number(),
+  day: Joi.number()
+})
 
-const Transaction = model('transaction', transactionSchema);
+const Transaction = model('transaction', transactionSchema)
 
 module.exports = {
-  transactionSchema,
   Transaction,
+  transactionSchema,
   joiTransactionSchema,
 };
