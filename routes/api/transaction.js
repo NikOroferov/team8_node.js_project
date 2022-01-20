@@ -2,16 +2,17 @@ const express = require('express');
 const router = express.Router();
 const { transactions: ctrl } = require('../../controllers');
 const { ctrlWrapper, validation, auth } = require('../../middlewares');
-const { transactionsSchemaJoi } = require('../../models/transaction');
+const { joiTransactionSchema } = require('../../models/transaction');
 
 router.get('/', auth, ctrlWrapper(ctrl.getAllTransactions));
 
 router.post(
-  '/:categoryId',
+  '/',
   auth,
-  validation(transactionsSchemaJoi),
+  validation(joiTransactionSchema),
   ctrlWrapper(ctrl.addTransaction),
 );
+
 router.delete('/:transactionId', auth, ctrlWrapper(ctrl.deleteTransaction));
 
 router.get(
