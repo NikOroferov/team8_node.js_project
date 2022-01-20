@@ -5,7 +5,7 @@ const { Category } = require('../../models');
 const addTransaction = async (req, res) => {
   const { _id } = req.user;
   
-  const { date, subcategory, category, transactionType, costs, incomes, year, month, day } =
+  const { created_at, subcategory, category, transactionType, costs, incomes, year, month, day } =
   req.body;
 
   const categoryInfo = await Category.findOne({ category });
@@ -17,7 +17,7 @@ const addTransaction = async (req, res) => {
   const { alias, icon } = categoryInfo;
 
   const newTransaction = {
-    created_at: date,
+    created_at,
     subcategory,
     category,
     transactionType,
