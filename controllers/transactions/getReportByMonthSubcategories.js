@@ -21,27 +21,28 @@ const getReportByMonthSubcategories = async (req, res, next) => {
           },
         },
         category: 1,
-        cost: 1,
-        income: 1,
+        costs: 1,
+        incomes: 1,
         subcategory: 1,
+        alias: 1,
       },
     },
     {
       $match: {
-        income: isIncome,
-        date: date,
-        category: category,
+        incomes: isIncome,
+        alias: category,
+        period: date,
       },
     },
     {
       $group: {
         _id: '$subcategory',
         totalInSubcategory: {
-          $sum: '$cost',
+          $sum: '$costs',
         },
         count: {
           $sum: 1,
-        },
+        }
       },
     },
     {
@@ -54,12 +55,11 @@ const getReportByMonthSubcategories = async (req, res, next) => {
   let result = await Transaction.find({ owner: _id });
   result = await Transaction.aggregate([agg]);
 
-
   res.json({
     status: 'success',
     code: 200,
     data: {
-      result
+      result,
     },
   });
 };
