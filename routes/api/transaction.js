@@ -27,4 +27,10 @@ router.get(
   ctrlWrapper(ctrl.getReportByMonthSubcategories),
 );
 
+router.get(
+  '/total-by-month',
+  auth,
+  ctrlWrapper(ctrl.getTotalReportByMonth),
+);
+
 module.exports = router;
