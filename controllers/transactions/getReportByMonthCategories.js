@@ -28,6 +28,7 @@ const getReportByMonthCategories = async (req, res) => {
         subcategory: 1,
         alias: 1,
         owner: 1,
+        icon: 1
       },
     },
     {
@@ -45,7 +46,10 @@ const getReportByMonthCategories = async (req, res) => {
         },
         alias: {
           $first: '$alias',
-        }
+        },
+        icon: {
+          $first: '$icon'
+      }
       },
     },
     {
@@ -56,6 +60,7 @@ const getReportByMonthCategories = async (req, res) => {
     {
       $project: {
           id: '$alias',
+          icon: 1,
           totalInCategory: 1,
           category_title: '$_id',
           category: '$alias',
