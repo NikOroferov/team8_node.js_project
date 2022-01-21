@@ -12,7 +12,7 @@ const getReportByMonthCategories = async (req, res) => {
   } else if (isIncome === 'false') {
     isIncome = false;
   }
-  
+
   const agg = [
     {
       $project: {
@@ -48,6 +48,20 @@ const getReportByMonthCategories = async (req, res) => {
         }
       },
     },
+    {
+      $sort: {
+          totalInCategory: -1
+      }
+    },
+    {
+      $project: {
+          id: '$alias',
+          totalInCategory: 1,
+          category_title: '$_id',
+          category: '$alias',
+          _id: 0
+      }
+  }
   ];
   
   // const bgg = [
