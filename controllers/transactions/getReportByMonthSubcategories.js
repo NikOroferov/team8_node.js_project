@@ -1,7 +1,9 @@
+const ObjectId = require('mongodb').ObjectId;
 const { Transaction } = require('../../models');
 
-const getReportByMonthSubcategories = async (req, res, next) => {
+const getReportByMonthSubcategories = async (req, res) => {
   const { _id } = req.user;
+  const id = _id.toString();
 
   let { date = '202201', isIncome, category } = req.query;
 
@@ -21,27 +23,30 @@ const getReportByMonthSubcategories = async (req, res, next) => {
           },
         },
         category: 1,
-        cost: 1,
-        income: 1,
+        costs: 1,
+        incomes: 1,
         subcategory: 1,
+        alias: 1,
+        owner: 1,
       },
     },
     {
       $match: {
-        income: isIncome,
-        date: date,
-        category: category,
+        incomes: isIncome,
+        alias: category,
+        period: date,
+        owner: ObjectId(id),
       },
     },
     {
       $group: {
         _id: '$subcategory',
         totalInSubcategory: {
-          $sum: '$cost',
+          $sum: '$costs',
         },
         count: {
           $sum: 1,
-        },
+        }
       },
     },
     {
@@ -50,16 +55,14 @@ const getReportByMonthSubcategories = async (req, res, next) => {
       },
     },
   ];
-
-  let result = await Transaction.find({ owner: _id });
-  result = await Transaction.aggregate([agg]);
-
+  
+  const result = await Transaction.aggregate([agg]);
 
   res.json({
     status: 'success',
     code: 200,
     data: {
-      result
+      result,
     },
   });
 };
