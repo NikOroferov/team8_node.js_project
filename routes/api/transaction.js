@@ -33,4 +33,10 @@ router.get(
   ctrlWrapper(ctrl.getTotalReportByMonth),
 );
 
+router.get(
+  '/summary',
+  auth,
+  ctrlWrapper(ctrl.getResumeReport),
+);
+
 module.exports = router;
