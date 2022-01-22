@@ -3,10 +3,11 @@ const { Transaction } = require('../../models');
 
 const getAllTransactions = async (req, res) => {
   const { _id } = req.user;
+  const { isIncome } = req.query;
 
-  const transactions = await Transaction.find({
-    owner: _id,
-  });
+  const transactions = req.query.isIncome
+    ? await Transaction.find({ owner: _id, incomes: isIncome })
+    : await Transaction.find({ owner: _id });
 
   if (!transactions) {
     throw new NotFound('There are no transactions');
