@@ -32,8 +32,7 @@ const equalToken = async refreshToken => {
     }
 
     const user = await User.findById(userToken._id);
-    const { _id: id } = user;
-    const payload = { id };
+    const payload = { _id: user.id };
     const token = jwt.sign(payload, GOOGLE_CLIENT_SECRET || SECRET_KEY, {
       expiresIn: '14d',
     });
