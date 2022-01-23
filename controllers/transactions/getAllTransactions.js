@@ -6,8 +6,8 @@ const getAllTransactions = async (req, res) => {
   const { isIncome } = req.query;
 
   const transactions = req.query.isIncome
-    ? await Transaction.find({ owner: _id, incomes: isIncome })
-    : await Transaction.find({ owner: _id });
+    ? await Transaction.find({ owner: _id, incomes: isIncome }).sort({"created_at": -1})
+    : await Transaction.find({ owner: _id }).sort({"created_at": -1});
 
   if (!transactions) {
     throw new NotFound('There are no transactions');
