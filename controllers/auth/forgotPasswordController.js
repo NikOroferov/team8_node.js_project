@@ -4,7 +4,7 @@ const sha256 = require('sha256');
 const sgMail = require('@sendgrid/mail');
 require('dotenv').config();
 
-const { SENDGRID_API_KEY, Email } = process.env;
+const { SENDGRID_API_KEY, SECRET_KEY, Email } = process.env;
 
 sgMail.setApiKey(SENDGRID_API_KEY);
 
@@ -14,7 +14,7 @@ const forgotPasswordController = async (req, res) => {
   if (!user) {
     throw new Unauthorized(`No user with email '${email}' found`);
   }
-  const password = sha256(Date.now() + process.env.SECRET_KEY, {
+  const password = sha256(Date.now() + SECRET_KEY || SENDGRID_API_KEY, {
     expiresIn: '1d',
   });
   user.password = password;

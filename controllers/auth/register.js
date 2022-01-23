@@ -10,12 +10,10 @@ const register = async (req, res) => {
   const { name, email, password } = req.body;
   const user = await User.findOne({ email });
   if (user) {
-    throw new Conflict(`${email} in use`);
+    res.status(409).json(new Conflict(`${email} in use`));
   }
   const avatarURL = gravatar.url(email);
-  const verificationToken = sha256(Date.now() + process.env.SECRET_KEY, {
-    expiresIn: '1d',
-  });
+  const verificationToken = sha256(Date.now() + process.env.SECRET_KEY);
   const newUser = new User({
     ...req.body,
     name,

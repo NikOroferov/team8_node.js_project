@@ -1,6 +1,6 @@
 const { User } = require('../../models');
 
-const verify = async (req, res) => {
+const verify = async (req, res, next) => {
   const { verificationToken } = req.params;
   const user = await User.findOne({ verificationToken });
   if (!user) {
@@ -9,8 +9,11 @@ const verify = async (req, res) => {
   await User.findByIdAndUpdate(user._id, {
     verify: true,
   });
-  res.json({
-    message: 'Verification successful',
+  // res.send(
+  //   '<script>window.location.href="http://localhost:3001/api/auth/login"</script>',
+  // );
+  return res.json({
+    message: `Email ${user.email} has been successfully confirmed`,
   });
 };
 
