@@ -4,6 +4,7 @@ const { Transaction } = require('../../models');
 
 const deleteTransaction = async (req, res) => {
   const { _id, balance } = req.user;
+  console.log(balance);
   const { transactionId } = req.params;
   const transaction = await Transaction.findOneAndRemove({
     _id: transactionId,
@@ -14,8 +15,8 @@ const deleteTransaction = async (req, res) => {
     throw new NotFound(`Transaction with id=${transactionId} not found`);
   }
 
-  const { value, expenses } = transaction;
-  const updateBalance = expenses === false ? balance + value : balance - value;
+  const {incomes , costs } = transaction;
+  const updateBalance = incomes === false ? balance + costs : balance - costs;
 
   if (updateBalance < 0) {
     throw new BadRequest('There are no enough money for this purchase');
@@ -24,7 +25,7 @@ const deleteTransaction = async (req, res) => {
   await User.findByIdAndUpdate(
     { _id },
     { balance: updateBalance },
-    { new: true },
+    // { new: true },
   );
 
   res.status(201).json({
