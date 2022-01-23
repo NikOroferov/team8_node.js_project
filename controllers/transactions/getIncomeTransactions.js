@@ -5,7 +5,7 @@ const getIncomeTransactions = async (req, res) => {
   const { _id } = req.user;
 
   const transactions = await Transaction.find({
-    expenses: true,
+    incomes: true,
     owner: _id,
   });
 
