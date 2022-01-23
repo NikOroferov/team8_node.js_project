@@ -4,16 +4,22 @@ const { sendEmail } = require('../../helpers');
 const { User } = require('../../models');
 const sha256 = require('sha256');
 
-const { PORT } = process.env;
+const { PORT, SECRET_KEY } = process.env;
 
 const register = async (req, res) => {
   const { name, email, password } = req.body;
   const user = await User.findOne({ email });
   if (user) {
-    res.status(409).json(new Conflict(`${email} in use`));
+    res
+      .status(409)
+      .json(
+        new Conflict(
+          `${email} in use! Please verify the email you provided when registering`,
+        ),
+      );
   }
   const avatarURL = gravatar.url(email);
-  const verificationToken = sha256(Date.now() + process.env.SECRET_KEY);
+  const verificationToken = sha256(Date.now() + SECRET_KEY);
   const newUser = new User({
     ...req.body,
     name,
@@ -35,7 +41,7 @@ const register = async (req, res) => {
     code: 201,
     data: {
       name: newUser.name || newUser.email,
-      avatarURL: newUser.avatarURL,
+      avatarURL: avatarURL,
       email: newUser.email,
       verificationToken: newUser.verificationToken,
     },

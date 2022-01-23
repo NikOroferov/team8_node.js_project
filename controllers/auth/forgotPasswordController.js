@@ -14,7 +14,7 @@ const forgotPasswordController = async (req, res) => {
   if (!user) {
     throw new Unauthorized(`No user with email '${email}' found`);
   }
-  const password = sha256(Date.now() + SECRET_KEY || SENDGRID_API_KEY, {
+  const password = sha256(Date.now() + SECRET_KEY, {
     expiresIn: '1d',
   });
   user.password = password;
