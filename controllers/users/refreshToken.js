@@ -5,7 +5,7 @@ const refresh = async (req, res, next) => {
 
   const newRefresh = await equalToken(refreshToken);
 
-  if (newRefresh === null || newRefresh === undefined) {
+  if (newRefresh === null || undefined) {
     return res
       .status(400)
       .send({ message: 'Sorry, the token is not provided!' });

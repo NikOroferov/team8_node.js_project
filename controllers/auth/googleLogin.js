@@ -1,155 +1,152 @@
-// const { User } = require('../../models');
-// const { nanoid } = require('nanoid');
-// const { OAuth2Client } = require('google-auth-library');
-// const jwt = require('jsonwebtoken');
+const queryString = require('query-string');
+const jwt = require('jsonwebtoken');
+const axios = require('axios');
+const { User } = require('../../models');
 
-// const { GOOGLE_SECRET_KEY, GOOGLE_CLIENT_ID } = process.env;
+const {
+  BASE_URL,
+  GOOGLE_CLIENT_ID,
+  GOOGLE_CLIENT_SECRET,
+  SECRET_KEY,
+  FRONTEND_URL,
+} = process.env;
 
-// const googleUser = new OAuth2Client(GOOGLE_CLIENT_ID);
+const googleLogin = (req, res) => {
+  const stringifyParams = queryString.stringify({
+    client_id: GOOGLE_CLIENT_ID,
+    redirect_uri: `${BASE_URL}/api/auth/google-redirect`,
+    scope: [
+      'https://www.googleapis.com/auth/userinfo.email',
+      'https://www.googleapis.com/auth/userinfo.profile',
+    ].join(' '),
+    response_type: 'code',
+    access_type: 'offline',
+    prompt: 'consent',
+  });
 
-// const googleLogin = (req, res) => {
-//   const { tokenId } = req.body;
-//   googleUser
-//     .verifyIdToken({
-//       idToken: tokenId,
-//       audience: GOOGLE_CLIENT_ID,
+  return res.redirect(
+    `https://accounts.google.com/o/oauth2/v2/auth?${stringifyParams}`,
+  );
+};
+
+const googleRedirect = async (req, res) => {
+  const fullUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
+  const urlObj = new URL(fullUrl);
+  const urlParams = queryString.parse(urlObj.search);
+  const code = urlParams.code;
+  const tokenData = await axios({
+    url: `https://oauth2.googleapis.com/token`,
+    method: 'post',
+    data: {
+      client_id: GOOGLE_CLIENT_ID,
+      client_secret: GOOGLE_CLIENT_SECRET,
+      redirect_uri: `${BASE_URL}/api/auth/google-redirect`,
+      grant_type: 'authorization_code',
+      code,
+    },
+  });
+  const userData = await axios({
+    url: 'https://www.googleapis.com/oauth2/v2/userinfo',
+    method: 'get',
+    headers: {
+      Authorization: `Bearer ${tokenData.data.access_token}`,
+    },
+  });
+
+  const user = await User.findOne({ email: userData.data.email });
+  let token = '';
+
+  const createToken = async id => {
+    token = await jwt.sign(id, SECRET_KEY);
+    await User.findOneAndUpdate({ email: userData.data.email }, { token });
+  };
+
+  if (!user) {
+    await User.create({
+      avatarURL: userData.avatarURL,
+      name: userData.data.name,
+      email: userData.data.email,
+      balance: user.balance,
+    });
+    await createToken(user._id);
+  } else {
+    await createToken(user._id);
+  }
+
+  return res.redirect(`${FRONTEND_URL}/google-redirect/?access_token=${token}`);
+};
+
+module.exports = {
+  googleLogin,
+  googleRedirect,
+};
+
+// // 1.По нажатию пустой кнопки гугл, летит запрос на бек
+// // Бек принимает, создает параметры под капотом
+// // Что - то в этом духе:
+
+//   const stringifiedParams = queryString.stringify({
+//     client_id: process.env.GOOGLE_CLIENT_ID,
+//     redirect_uri: ${process.env.BASE_URL}/api/users/google-redirect,
+//     scope: [
+//       'https://www.googleapis.com/auth/userinfo.email',
+//       'https://www.googleapis.com/auth/userinfo.profile',
+//     ].join(' '),
+//     response_type: 'code',
+//     access_type: 'offline',
+//     prompt: 'consent',
+//   })
+
+// // и вставляет редирект для пользователя
+
+// return res.redirect(
+//     https://accounts.google.com/o/oauth2/v2/auth?${stringifiedParams},
+// )
+
+// // 2.Пользователь редиректится https://accounts.google.com/o/oauth2/v2/auth.....
+// // выберает свой емейл если их у него много, попадает к гуглу под капот, он снимает
+// // наши параметры его параметры заглянув к нему в браузер если там в сесиях нету следов регистрации в гугле, заставляет его ввести логин и пароль гугл почты, и идет на страницу
+// // редиректа которую в запросе указал бек в параметрах
+
+// // 3. Бек по заранее указаному в параметрах поинту redirect_uri: ${process.env.BASE_URL}/api/users/google-redirect принимает инфу от гугла в виде токена и парсит ее вот примерный код
+
+// const googleRedirect = async (req, res) => {
+//     const fullUrl = ${req.protocol}://${req.get('host')}${req.originalUrl}
+//     const urlObj = new URL(fullUrl)
+//     const urlParams = queryString.parse(urlObj.search)
+//     const code = urlParams.code
+//     const tokenData = await axios({
+//         url: 'https://oauth2.googleapis.com/token',
+//         method: 'post',
+//         data: {
+//             client_id: process.env.GOOGLE_CLIENT_ID,
+//             client_secret: process.env.GOOGLE_CLIENT_SECRET,
+//             redirect_uri: ${process.env.BASE_URL}/api/users/google-redirect,
+//             grant_type: 'authorization_code',
+//             code,
+//         },
 //     })
-//     .then(res => {
-//       // eslint-disable-next-line camelcase
-//       const { email_verified, name, email } = res.payload;
-
-//       // eslint-disable-next-line camelcase
-//       if (email_verified) {
-//         User.findOne({ email }).exec((err, user) => {
-//           const verificationToken = nanoid();
-//           if (err) {
-//             return res.status(400).json({
-//               error: 'Sorry, an error occurred! Please try again ...',
-//             });
-//           } else {
-//             if (user) {
-//               const payload = {
-//                 id: user._id,
-//               };
-//               const token = jwt.sign(payload, GOOGLE_SECRET_KEY, {
-//                 expiresIn: '14d',
-//               });
-
-//               const { id, email, verificationToken } = user;
-
-//               User.findByIdAndUpdate(user.id, { token });
-
-//               res.json({
-//                 user: { id, token, email, verificationToken },
-//               });
-//             } else {
-//               const password = email + GOOGLE_SECRET_KEY;
-
-//               const newUser = new User({
-//                 name,
-//                 email,
-//                 password,
-//                 verificationToken,
-//               });
-//               newUser.save((err, data) => {
-//                 if (err) {
-//                   return res.status(400).json({
-//                     error: 'Sorry, an error occurred! Please try again...',
-//                   });
-//                 }
-//                 const payload = {
-//                   id: user._id,
-//                 };
-//                 const token = jwt.sign(payload, GOOGLE_SECRET_KEY, {
-//                   expiresIn: '14d',
-//                 });
-
-//                 const { id, email } = newUser;
-
-//                 User.findByIdAndUpdate(data.id, { token });
-
-//                 res.json({
-//                   status: 'succes',
-//                   code: 200,
-//                   data: {
-//                     token,
-//                     id,
-//                     email,
-//                     user: {
-//                       id: newUser._id,
-//                       avatarURL: newUser.avatarURL,
-//                       name: newUser.name,
-//                       email: newUser.email,
-//                       balance: newUser.balance,
-//                     },
-//                   },
-//                 });
-//               });
-//             }
-//           }
-//         });
-//       }
-//     });
-// };
-
-// module.exports = googleLogin;
-
-// ВАРИАНТ 2
-
-// import * as queryString from 'query-string';
-
-// const stringifiedParams = queryString.stringify({
-//   client_id: process.env.GOOGLE_CLIENT_ID,
-//   redirect_uri: process.env.GOOGLE_REDIRECT_URL,
-//   scope: [
-//     'https://www.googleapis.com/auth/userinfo.email',
-//     'https://www.googleapis.com/auth/userinfo.profile',
-//   ].join(' '), // space seperated string
-//   response_type: 'code',
-//   access_type: 'offline',
-//   prompt: 'consent',
-// });
-
-// const googleLoginUrl = `https://accounts.google.com/o/oauth2/v2/auth?${stringifiedParams}`;
-
-// const urlParams = queryString.parse(window.location.search);
-
-// if (urlParams.error) {
-//   console.log(`An error occurred: ${urlParams.error}`);
-// } else {
-//   console.log(`The code is: ${urlParams.code}`);
+//     const userData = await axios({
+//         url: 'https://www.googleapis.com/oauth2/v2/userinfo',
+//         method: 'get',
+//         headers: {
+//             Authorization: Bearer ${tokenData.data.access_token},
+//         },
+//     })
+// //  ............
+// //     тут вытянули нужные поля из токена, особенно email, сверили в своей бд есть нету, если нету создаем пользователя, с оговореными полями имя, емейл,
+// //         пасворд но пустой или нет тут нужно подумать, аватарка там будет гугловская ссылка, и т.д, записываем в бд, вытягиваем  из бд инфу только что созданного
+// //     юзера или уже существующего, и тут у нас два пути засунуть все в токен зашифровать, а на фронте расшифровать или просто в доменную строку через анперсанты натолкать например:
+// // результат в таком виде
+// // 3.1
+// return res.redirect(`${process.env.FRONTEND_URL}/google-redirect/?access_token=${token}`);
+// // 3.2
+// return res.redirect(
+//     `${process.env.HOME_URL}/google-redirect/?token=${token}&email=${
+//       user.email
+//     }&avatar=${user.avatar}
+// // и так далее все оговоренные поля
+// //     ............
 // }
 
-// // FrontEnd
-
-// // import axios from 'axios';
-
-// // async function getAccessTokenFromCode(code) {
-// //   const { data } = await axios({
-// //     url: `https://oauth2.googleapis.com/token`,
-// //     method: 'post',
-// //     data: {
-// //       client_id: process.env.APP_ID_GOES_HERE,
-// //       client_secret: process.env.APP_SECRET_GOES_HERE,
-// //       redirect_uri: 'https://www.example.com/authenticate/google',
-// //       grant_type: 'authorization_code',
-// //       code,
-// //     },
-// //   });
-// //   console.log(data); // { access_token, expires_in, token_type, refresh_token }
-// //   return data.access_token;
-// // }
-
-// import axios from 'axios';
-
-// async function getGoogleUserInfo(access_token) {
-//   const { data } = await axios({
-//     url: 'https://www.googleapis.com/oauth2/v2/userinfo',
-//     method: 'get',
-//     headers: {
-//       Authorization: `Bearer ${access_token}`,
-//     },
-//   });
-//   console.log(data); // { id, email, given_name, family_name }
-//   return data;
-// }
+// // 4. Фронт на уже созданой дополнительной странице гугл редиректа ловит ответ редиректа бека, парсит или только токен или строку с аперсантами, засовывает через редакс в локал токен, и обновляет стейт редакса, и потом происходят редиректы и дальнейшие

@@ -17,7 +17,7 @@ const repeatVerifyEmail = async (req, res) => {
   const mail = {
     to: email,
     subject: 'Email confirmation',
-    html: `<a target="_blank" href="http://localhost:${PORT}/api/users/balance'>Email<b>${email}</b>has been successfully confirmed</a>`,
+    html: `<a target="_blank" href="http://localhost:${PORT}/api/users/verify/${user.verificationToken}'>Welcome to our KapuSta app! To continue working, please confirm your registration <b>${email}</b></a>`,
   };
   await sendEmail(mail);
   res.json({
