@@ -16,7 +16,7 @@ router.post(
 router.delete('/:transactionId', auth, ctrlWrapper(ctrl.deleteTransaction));
 
 router.get(
-  '/category-by-month', // подправить рут
+  '/category-by-month', 
   auth,
   ctrlWrapper(ctrl.getReportByMonthCategories),
 );
