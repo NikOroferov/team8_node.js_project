@@ -4,7 +4,7 @@ const { Transaction } = require('../../models');
 
 const deleteTransaction = async (req, res) => {
   const { _id, balance } = req.user;
-  console.log(balance);
+  
   const { transactionId } = req.params;
   const transaction = await Transaction.findOneAndRemove({
     _id: transactionId,
@@ -24,8 +24,7 @@ const deleteTransaction = async (req, res) => {
 
   await User.findByIdAndUpdate(
     { _id },
-    { balance: updateBalance },
-    // { new: true },
+    { balance: updateBalance }
   );
 
   res.status(201).json({
