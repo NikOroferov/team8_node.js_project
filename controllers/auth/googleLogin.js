@@ -70,13 +70,16 @@ const googleRedirect = async (req, res) => {
       name: userData.data.name,
       email: userData.data.email,
       balance: user.balance,
+      avatar: userData.data.avatar,
     });
     await createToken(user._id);
   } else {
     await createToken(user._id);
   }
 
-  return res.redirect(`${FRONTEND_URL}/google-redirect/?access_token=${token}`);
+  return res.redirect(
+    `${FRONTEND_URL}google-redirect/?access_token=${token}&email=${user.email}&avatar=${user.avatar}&name=${user.name}`,
+  );
 };
 
 module.exports = googleLogin;

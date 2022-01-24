@@ -18,13 +18,13 @@ const register = async (req, res) => {
         ),
       );
   }
-  const avatarURL = gravatar.url(email);
+  const avatar = gravatar.url(email);
   const verificationToken = sha256(Date.now() + SECRET_KEY);
   const newUser = new User({
     ...req.body,
     name,
     verificationToken,
-    avatarURL,
+    avatar,
   });
   newUser.setPassword(password);
   await newUser.save();
@@ -41,7 +41,7 @@ const register = async (req, res) => {
     code: 201,
     data: {
       name: newUser.name || newUser.email,
-      avatarURL: avatarURL,
+      avatar: avatar,
       email: newUser.email,
       verificationToken: newUser.verificationToken,
     },

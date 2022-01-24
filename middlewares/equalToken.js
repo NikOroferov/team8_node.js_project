@@ -2,7 +2,7 @@ const { Unauthorized } = require('http-errors');
 const jwt = require('jsonwebtoken');
 const { User } = require('../models');
 
-const { GOOGLE_CLIENT_SECRET, SECRET_KEY } = process.env;
+const { SECRET_KEY } = process.env;
 
 const equalToken = async refreshToken => {
   try {
@@ -12,7 +12,7 @@ const equalToken = async refreshToken => {
 
     const refreshValidToken = token => {
       try {
-        return jwt.verify(token, SECRET_KEY || GOOGLE_CLIENT_SECRET, {
+        return jwt.verify(token, SECRET_KEY, {
           expiresIn: '14d',
         });
       } catch (error) {
@@ -33,7 +33,7 @@ const equalToken = async refreshToken => {
 
     const user = await User.findById(userToken._id);
     const payload = { _id: user.id };
-    const token = jwt.sign(payload, GOOGLE_CLIENT_SECRET || SECRET_KEY, {
+    const token = jwt.sign(payload, SECRET_KEY, {
       expiresIn: '14d',
     });
     const newToken = token(user.email);
