@@ -4,7 +4,7 @@ const { sendEmail } = require('../../helpers');
 const { User } = require('../../models');
 const sha256 = require('sha256');
 
-const { PORT, SECRET_KEY } = process.env;
+const { BASE_URL, SECRET_KEY } = process.env;
 
 const register = async (req, res) => {
   const { name, email, password } = req.body;
@@ -32,7 +32,7 @@ const register = async (req, res) => {
   const mail = {
     to: email,
     subject: 'Email confirmation',
-    html: `<a target="_blank" href="http://localhost:${PORT}/api/users/verify/${verificationToken}">Welcome to our KapuSta app! To continue working, please confirm your registration <b>${email}</b></a>`,
+    html: `<a target="_blank" href="${BASE_URL}/api/users/verify/${verificationToken}">Welcome to our KapuSta app! To continue working, please confirm your registration <b>${email}</b></a>`,
   };
   await sendEmail(mail);
 
