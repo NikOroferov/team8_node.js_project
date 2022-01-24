@@ -8,15 +8,17 @@ const { SENDGRID_API_KEY, SECRET_KEY, Email } = process.env;
 
 sgMail.setApiKey(SENDGRID_API_KEY);
 
-const forgotPasswordController = async (req, res) => {
+const forgotPassword = async (req, res) => {
   const { email } = req.body;
-  const user = await User.findOne({ email, verify: true });
+  const user = await User.findOne({
+    email,
+    verify: true,
+    verificationToken: false,
+  });
   if (!user) {
     throw new Unauthorized(`No user with email '${email}' found`);
   }
-  const password = sha256(Date.now() + SECRET_KEY, {
-    expiresIn: '1d',
-  });
+  const password = sha256(Date.now() + SECRET_KEY);
   user.password = password;
 
   await user.save();
@@ -32,4 +34,4 @@ const forgotPasswordController = async (req, res) => {
   res.json({ status: 'succes' });
 };
 
-module.exports = forgotPasswordController;
+module.exports = forgotPassword;
