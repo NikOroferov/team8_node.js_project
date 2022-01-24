@@ -1,6 +1,7 @@
 const { Schema, model } = require('mongoose');
 const bcrypt = require('bcryptjs');
 const Joi = require('joi');
+const gravatar = require('gravatar');
 
 const userSchema = Schema(
   {
@@ -23,7 +24,9 @@ const userSchema = Schema(
     },
     avatarURL: {
       type: String,
-      required: true,
+      default: function () {
+        return gravatar.url(this.email, { s: '250' }, true);
+      },
     },
     balance: {
       type: Number,
@@ -58,6 +61,7 @@ userSchema.methods.comparePassword = function (password) {
 const joiUserSchema = Joi.object({
   email: Joi.string().required(),
   password: Joi.string().min(6).required(),
+  balance: Joi.number().positive().allow(0),
 });
 
 const User = model('user', userSchema);

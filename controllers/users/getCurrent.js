@@ -9,7 +9,7 @@ const getCurrent = async (req, res) => {
   }
   res.status(200).json({
     user: {
-      avatarURL: user.avatarURL,
+      avatar: user.avatar,
       name: user.name,
       email: user.email,
       balance: user.balance,

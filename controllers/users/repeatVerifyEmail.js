@@ -1,7 +1,7 @@
 const { User } = require('../../models');
 const { sendEmail } = require('../../helpers');
 
-const { PORT } = process.env;
+const { BASE_URL } = process.env;
 
 const repeatVerifyEmail = async (req, res) => {
   const { email } = req.body;
@@ -17,7 +17,7 @@ const repeatVerifyEmail = async (req, res) => {
   const mail = {
     to: email,
     subject: 'Email confirmation',
-    html: `<a target="_blank" href="http://localhost:${PORT}/api/users/verify/${user.verificationToken}'>Welcome to our KapuSta app! To continue working, please confirm your registration <b>${email}</b></a>`,
+    html: `<a target="_blank" href="${BASE_URL}/api/users/verify/${user.verificationToken}'>Welcome to our KapuSta app! To continue working, please confirm your registration <b>${email}</b></a>`,
   };
   await sendEmail(mail);
   res.json({

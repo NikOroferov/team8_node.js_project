@@ -8,8 +8,9 @@ const router = express.Router();
 
 router.post('/register', validation(joiUserSchema), ctrlWrapper(ctrl.register));
 router.post('/login', validation(joiUserSchema), ctrlWrapper(ctrl.login));
-router.post('/googleLogin', ctrlWrapper(ctrl.googleLogin));
-router.get('/logout', auth, ctrlWrapper(ctrl.logout));
-router.post('/forgot_password', ctrlWrapper(ctrl.forgotPasswordController));
+router.get('/googleLogin', ctrlWrapper(ctrl.googleLogin));
+router.get('/googleRedirect', ctrlWrapper(ctrl.googleRedirect));
+router.post('/logout', auth, ctrlWrapper(ctrl.logout));
+router.post('/forgotPassword', ctrlWrapper(ctrl.forgotPasswordController));
 
 module.exports = router;

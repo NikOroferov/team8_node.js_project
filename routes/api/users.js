@@ -18,6 +18,8 @@ router.get('/verify/:verificationToken', ctrlWrapper(ctrl.verify));
 
 router.post('/verify', ctrlWrapper(ctrl.repeatVerifyEmail));
 
+router.post('/refresh', ctrlWrapper(ctrl.refreshToken));
+
 router.patch('/balance', auth, ctrlWrapper(ctrl.balance));
 
 module.exports = router;

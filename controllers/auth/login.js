@@ -5,7 +5,7 @@ const { User } = require('../../models');
 
 require('dotenv').config();
 
-const { SECRET_KEY, GOOGLE_CLIENT_SECRET, GOOGLE_CLIENT_ID } = process.env;
+const { SECRET_KEY, GOOGLE_CLIENT_ID } = process.env;
 
 const login = async (req, res, next) => {
   try {
@@ -48,7 +48,7 @@ const login = async (req, res, next) => {
     const { _id: id, balance } = user;
     const payload = { id };
 
-    const token = jwt.sign(payload, GOOGLE_CLIENT_SECRET || SECRET_KEY, {
+    const token = jwt.sign(payload, SECRET_KEY, {
       expiresIn: '14d',
     });
 
@@ -68,7 +68,7 @@ const login = async (req, res, next) => {
         token,
         user: {
           id: id,
-          avatarURL: user.avatarURL,
+          avatar: user.avatar,
           name: name || email,
           email: email,
           balance: balance,
