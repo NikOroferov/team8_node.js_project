@@ -10,8 +10,6 @@ const balance = async (req, res, next) => {
       { balance: newBalance },
       { new: true },
     );
-    console.log(_id);
-    console.log(newBalance);
     if (!updateBalanceUser) {
       throw new NotFound('User not found');
     }
