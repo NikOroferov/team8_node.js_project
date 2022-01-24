@@ -3,13 +3,15 @@ const { NotFound } = require('http-errors');
 
 const balance = async (req, res, next) => {
   try {
-    const { _id } = req.user._id;
-    const { balance } = req.body;
+    const { _id } = req.user;
+    const { newBalance } = req.body;
     const updateBalanceUser = await User.findByIdAndUpdate(
       _id,
-      { balance: balance },
+      { balance: newBalance },
       { new: true },
     );
+    console.log(_id);
+    console.log(newBalance);
     if (!updateBalanceUser) {
       throw new NotFound('User not found');
     }

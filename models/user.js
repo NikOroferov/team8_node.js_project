@@ -27,7 +27,7 @@ const userSchema = Schema(
     },
     balance: {
       type: Number,
-      default: 0,
+      default: null,
     },
     verify: {
       type: Boolean,
