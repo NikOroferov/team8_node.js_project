@@ -14,10 +14,10 @@ const updateAvatar = async (req, res) => {
     image.resize(250, 250, jimp.AUTO).writeAsync(tempUpload);
     const resultUpload = path.join(avatarsDir, imageName);
     await fs.rename(tempUpload, resultUpload);
-    const avatarURL = path.join('public', 'avatars', imageName);
-    await User.findByIdAndUpdate(id, { avatar: avatarURL }, { new: true });
+    const avatar = path.join('public', 'avatars', imageName);
+    await User.findByIdAndUpdate(id, { avatar: avatar }, { new: true });
 
-    res.json({ avatarURL });
+    res.json({ avatar });
   } catch (error) {
     await fs.unlink(tempUpload);
     throw error;

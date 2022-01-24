@@ -68,7 +68,7 @@ const login = async (req, res, next) => {
         token,
         user: {
           id: id,
-          avatarURL: user.avatarURL,
+          avatar: user.avatar,
           name: name || email,
           email: email,
           balance: balance,

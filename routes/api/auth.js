@@ -10,7 +10,7 @@ router.post('/register', validation(joiUserSchema), ctrlWrapper(ctrl.register));
 router.post('/login', validation(joiUserSchema), ctrlWrapper(ctrl.login));
 router.get('/googleLogin', ctrlWrapper(ctrl.googleLogin));
 router.get('/googleRedirect', ctrlWrapper(ctrl.googleRedirect));
-router.get('/logout', auth, ctrlWrapper(ctrl.logout));
+router.post('/logout', auth, ctrlWrapper(ctrl.logout));
 router.post('/forgotPassword', ctrlWrapper(ctrl.forgotPasswordController));
 
 module.exports = router;
