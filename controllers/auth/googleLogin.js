@@ -79,10 +79,8 @@ const googleRedirect = async (req, res) => {
   return res.redirect(`${FRONTEND_URL}/google-redirect/?access_token=${token}`);
 };
 
-module.exports = {
-  googleLogin,
-  googleRedirect,
-};
+module.exports = googleLogin;
+module.exports = googleRedirect;
 
 // // 1.По нажатию пустой кнопки гугл, летит запрос на бек
 // // Бек принимает, создает параметры под капотом
