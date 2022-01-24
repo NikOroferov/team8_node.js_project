@@ -61,16 +61,23 @@ const googleRedirect = async (req, res) => {
       id: user._id,
     };
     token = await jwt.sign(payload, SECRET_KEY, { expiresIn: '14d' });
-    await User.findOneAndUpdate({ email: userData.data.email }, { token });
+    await User.findOneAndUpdate(
+      {
+        avatar: userData.data.avatar,
+        name: userData.data.name,
+        email: userData.data.email,
+        balance: userData.data.balance,
+      },
+      { token },
+    );
   };
 
   if (!user) {
     await User.create({
-      avatarURL: userData.avatarURL,
+      avatar: userData.data.avatar,
       name: userData.data.name,
       email: userData.data.email,
-      balance: user.balance,
-      avatar: userData.data.avatar,
+      balance: userData.data.balance,
     });
     await createToken(user._id);
   } else {

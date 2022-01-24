@@ -8,11 +8,9 @@ const verify = async (req, res, next) => {
   }
   await User.findByIdAndUpdate(user._id, {
     verify: true,
+    verificationToken: false,
   });
-  // res.send(
-  //   '<script>window.location.href="http://localhost:3001/api/auth/login"</script>',
-  // );
-  return res.json({
+  res.json({
     message: `Email ${user.email} has been successfully confirmed`,
   });
 };
