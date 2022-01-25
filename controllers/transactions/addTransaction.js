@@ -6,7 +6,7 @@ const { User } = require('../../models');
 const addTransaction = async (req, res) => {
   const { _id, balance } = req.user;
   
-  const { created_at, subcategory, category, transactionType, costs, incomes, year, month, day } =
+  const { createdDate, subcategory, category, transactionType, costs, incomes, year, month, day } =
   req.body;
 
   const categoryInfo = await Category.findOne({ category });
@@ -18,7 +18,7 @@ const addTransaction = async (req, res) => {
   const { alias, icon } = categoryInfo;
 
   const newTransaction = {
-    created_at,
+    createdDate,
     subcategory,
     category,
     transactionType,
@@ -34,15 +34,15 @@ const addTransaction = async (req, res) => {
     owner: _id,
   };
 
-  const updateBalance = incomes === false ? balance - costs : balance + costs;
+  const updatedBalance = incomes === false ? balance - costs : balance + costs;
 
-  if (updateBalance < 0) {
+  if (updatedBalance < 0) {
     throw new BadRequest('There are no enough money for this purchase');
   }
 
   await User.findByIdAndUpdate(
     { _id },
-    { balance: updateBalance }
+    { balance: updatedBalance }
   );
 
   const result = await Transaction.create(newTransaction);
@@ -51,7 +51,7 @@ const addTransaction = async (req, res) => {
     code: 201,
     data: {
       result,
-      balance: updateBalance,
+      balance: updatedBalance,
     },
   });
 };

@@ -5,7 +5,7 @@ const getReportByMonthCategories = async (req, res) => {
   const { _id } = req.user;
   const id = _id.toString();
 
-  let { date = '202201', isIncome } = req.query;
+  let { date, isIncome } = req.query;
 
   if (isIncome === 'true') {
     isIncome = true;
@@ -13,13 +13,13 @@ const getReportByMonthCategories = async (req, res) => {
     isIncome = false;
   }
 
-  const agg = [
+  const sortTransactionByCategoryByMonth = [
     {
       $project: {
         period: {
           $dateToString: {
             format: '%Y%m',
-            date: '$created_at',
+            date: '$createdDate',
           },
         },
         category: 1,
@@ -69,33 +69,42 @@ const getReportByMonthCategories = async (req, res) => {
   }
   ];
   
-  // const bgg = [
-  //   {
-  //       $match: {
-  //         owner: ObjectId(id),
-  //       },
-  //     },
-  //   {
-  //     $group: {
-  //       _id: '$owner',
-  //       firstAdd: {
-  //         $first: '$created_at',
-  //       },
-  //     },
-  //   },
-  // ];
+  const foundFirstTransactionByUser = [
+    {
+        $match: {
+          owner: ObjectId(id),
+        },
+      },
+    {
+      $group: {
+        _id: '$owner',
+        firstAdd: {
+          $first: '$createdDate',
+        },
+      },
+    },
+    {
+      $project: {
+          date: {
+              $dateToString: {
+                  format: '%Y%m',
+                  date: '$firstAdd'
+              }
+          }
+      }
+    }
+  ];
 
-  const result = await Transaction.aggregate([agg]);
+  const result = await Transaction.aggregate([sortTransactionByCategoryByMonth]);
 
-  // let neededDay = await Transaction.find({ owner: _id });
-  // neededDay = await Transaction.aggregate([bgg]);
+  const firstDate = await Transaction.aggregate([foundFirstTransactionByUser]);
 
   res.json({
     status: 'success',
     code: 200,
     data: {
       result,
-      // neededDay,
+      firstDate,
     },
   });
 };

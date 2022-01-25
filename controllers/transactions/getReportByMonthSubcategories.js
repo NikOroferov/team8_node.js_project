@@ -5,7 +5,7 @@ const getReportByMonthSubcategories = async (req, res) => {
   const { _id } = req.user;
   const id = _id.toString();
 
-  let { date = '202201', isIncome, category } = req.query;
+  let { date, isIncome, category } = req.query;
 
   if (isIncome === 'true') {
     isIncome = true;
@@ -13,13 +13,13 @@ const getReportByMonthSubcategories = async (req, res) => {
     isIncome = false;
   }
 
-  const agg = [
+  const sortTransactionBySubcategoryByMonth = [
     {
       $project: {
         period: {
           $dateToString: {
             format: '%Y%m',
-            date: '$created_at',
+            date: '$createdDate',
           },
         },
         category: 1,
@@ -56,7 +56,7 @@ const getReportByMonthSubcategories = async (req, res) => {
     },
   ];
   
-  const result = await Transaction.aggregate([agg]);
+  const result = await Transaction.aggregate([sortTransactionBySubcategoryByMonth]);
 
   res.json({
     status: 'success',
