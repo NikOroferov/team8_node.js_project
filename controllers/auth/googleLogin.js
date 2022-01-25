@@ -50,13 +50,14 @@ const googleRedirect = async (req, res) => {
       Authorization: `Bearer ${tokenData.data.access_token}`,
     },
   });
-  const { email } = userData.data;
+  const { email, name } = userData.data;
   let user = await User.findOne({ email });
   const avatar = gravatar.url(email);
 
   if (!user) {
-    user = await new User({
+    user = await User.create({
       ...req.body,
+      name,
       email,
       avatar,
     });
@@ -66,7 +67,9 @@ const googleRedirect = async (req, res) => {
   const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '1h' });
   user = await User.findByIdAndUpdate(user._id, { token });
 
-  return res.redirect(`${FRONTEND_URL}/google-redirect?token=${token}`);
+  return res.redirect(
+    `${FRONTEND_URL}/google-redirect?token=${token}&email=${email}&name=${name}&avatar=${avatar}`,
+  );
 };
 
 module.exports = {
