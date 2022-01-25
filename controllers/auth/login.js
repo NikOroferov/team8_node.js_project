@@ -1,68 +1,37 @@
 const { Unauthorized, BadRequest } = require('http-errors');
 const jwt = require('jsonwebtoken');
-const { OAuth2Client } = require('google-auth-library');
 const { User } = require('../../models');
+const bcrypt = require('bcrypt');
 
 require('dotenv').config();
 
-const { SECRET_KEY, GOOGLE_CLIENT_ID } = process.env;
+const { SECRET_KEY } = process.env;
 
 const login = async (req, res, next) => {
   try {
-    const { name, email, password, tokenId } = req.body;
+    const { email, password } = req.body;
 
-    if (!password && !tokenId) {
-      throw new BadRequest('Sorry, you need a password or token ID');
+    if (!password) {
+      throw new BadRequest('Sorry, you need a password');
     }
 
-    let user = await User.findOne({
-      email,
-      verify: true,
-    });
-
-    if (
-      (!user || !user.verify || user.comparePassword(password) == null) &&
-      !tokenId
-    ) {
-      throw new Unauthorized(`Email ${email} or password is wrong`);
+    const user = await User.findOne({ email });
+    if (!user || !user.verify) {
+      throw new Unauthorized(
+        `Email ${email} is wrong or not verify, or password is wrong`,
+      );
     }
 
-    if (tokenId) {
-      const client = new OAuth2Client(GOOGLE_CLIENT_ID);
-      const ticket = await client
-        .verifyIdToken({
-          idToken: tokenId,
-          audience: GOOGLE_CLIENT_ID,
-        })
-        .catch(() => {
-          throw new Unauthorized('Invalid token');
-        });
-
-      const { name: googleName } = ticket.getPayload();
-
-      if (!user && ticket) {
-        user = await User.create({
-          email,
-          name: googleName,
-        });
-      }
+    if (!(await bcrypt.compare(password, user.password))) {
+      throw new Unauthorized(`Wrong password`);
     }
-
-    const { _id: id, balance } = user;
-    const payload = { id };
+    const payload = { id: user._id };
 
     const token = jwt.sign(payload, SECRET_KEY, {
       expiresIn: '14d',
     });
 
-    await User.findByIdAndUpdate(
-      id,
-      { token },
-      {
-        new: true,
-        select: 'token',
-      },
-    );
+    await User.findByIdAndUpdate(user._id, { token });
 
     res.json({
       status: 'succes',
@@ -70,11 +39,10 @@ const login = async (req, res, next) => {
       data: {
         token,
         user: {
-          id: id,
+          id: user._id,
           avatar: user.avatar,
-          name: name || email,
-          email: email,
-          balance: balance,
+          email: user.email,
+          balance: user.balance,
         },
       },
     });

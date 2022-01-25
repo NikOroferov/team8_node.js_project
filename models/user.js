@@ -1,7 +1,6 @@
 const { Schema, model } = require('mongoose');
 const bcrypt = require('bcryptjs');
 const Joi = require('joi');
-const gravatar = require('gravatar');
 
 const userSchema = Schema(
   {
@@ -23,10 +22,7 @@ const userSchema = Schema(
       default: null,
     },
     avatar: {
-      type: String,
-      default: function () {
-        return gravatar.url(this.email, { s: '250' }, true);
-      },
+      type: Schema.Types.Mixed,
     },
     balance: {
       type: Number,
@@ -49,14 +45,13 @@ const userSchema = Schema(
   { versionKey: false, timestamps: true },
 );
 
-userSchema.methods.setPassword = function (password) {
+userSchema.pre('save', async function () {
   if (this.isNew || this.isModified) {
-    this.password = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
+    this.password = await bcrypt.hash(this.password, 10);
   }
-};
+});
 
 userSchema.methods.comparePassword = function (password) {
-  if (!password || !this.password) return false;
   return bcrypt.compareSync(password, this.password);
 };
 
