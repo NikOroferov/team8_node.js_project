@@ -9,26 +9,29 @@ const { SECRET_KEY, GOOGLE_CLIENT_ID } = process.env;
 
 const login = async (req, res, next) => {
   try {
-    const { name, email, password, tokenId } = req.body;
+    const { name, email, password, token } = req.body;
 
-    if (!password && !tokenId) {
+    if (!password && !token) {
       throw new BadRequest('Sorry, you need a password or token ID');
     }
 
-    let user = await User.findOne({ email, verify: true });
+    let user = await User.findOne({
+      email,
+      verify: true,
+    });
 
     if (
       (!user || !user.verify || user.comparePassword(password) == null) &&
-      !tokenId
+      !token
     ) {
       throw new Unauthorized(`Email ${email} or password is wrong`);
     }
 
-    if (tokenId) {
+    if (token) {
       const client = new OAuth2Client(GOOGLE_CLIENT_ID);
       const ticket = await client
         .verifyIdToken({
-          idToken: tokenId,
+          idToken: token,
           audience: GOOGLE_CLIENT_ID,
         })
         .catch(() => {
@@ -48,13 +51,13 @@ const login = async (req, res, next) => {
     const { _id: id, balance } = user;
     const payload = { id };
 
-    const token = jwt.sign(payload, SECRET_KEY, {
+    const newToken = jwt.sign(payload, SECRET_KEY, {
       expiresIn: '14d',
     });
 
     await User.findByIdAndUpdate(
       id,
-      { token },
+      { newToken },
       {
         new: true,
         select: 'token',
