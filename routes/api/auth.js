@@ -9,7 +9,9 @@ const router = express.Router();
 router.post('/register', validation(joiUserSchema), ctrlWrapper(ctrl.register));
 router.post('/login', validation(joiUserSchema), ctrlWrapper(ctrl.login));
 router.get('/googleLogin', ctrlWrapper(ctrl.googleLogin));
-router.get('/google-redirect', ctrlWrapper(ctrl.googleRedirect));
+
+router.get('/google-redirect', ctrlWrapper(ctrl.googleLogin));
+
 router.post('/logout', auth, ctrlWrapper(ctrl.logout));
 router.post('/forgotPassword', ctrlWrapper(ctrl.forgotPassword));
 router.use('/link', (req, res) => {

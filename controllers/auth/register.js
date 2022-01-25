@@ -40,7 +40,6 @@ const register = async (req, res) => {
     status: 'succes',
     code: 201,
     data: {
-      name: newUser.name || newUser.email,
       avatar: newUser.avatar,
       email: newUser.email,
       verificationToken: newUser.verificationToken,

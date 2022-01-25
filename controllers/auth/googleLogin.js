@@ -4,13 +4,13 @@ const axios = require('axios');
 // const URL = require('url');
 const { nanoid } = require('nanoid');
 const { User } = require('../../models');
-
+require('dotenv').config();
 const {
   BASE_URL,
   GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET,
   SECRET_KEY,
-  FRONTEND_URL,
+  // FRONTEND_URL,
 } = process.env;
 
 const googleLogin = (req, res) => {
@@ -55,36 +55,37 @@ const googleRedirect = async (req, res) => {
     },
   });
 
-  // const user = await User.findOne({ email: userData.data.email });
-  // let token = '';
+  //   const user = await User.findOne({ email: userData.data.email });
+  //   let token = '';
 
-  // const createToken = async id => {
-  //   token = await jwt.sign(id, SECRET_KEY, { expiresIn: '14d' });
-  //   await User.findOneAndUpdate(
-  //     { token },
-  //     {
+  //   const createToken = async id => {
+  //     token = await jwt.sign({ _id: id }, SECRET_KEY, { expiresIn: '14d' });
+  //     await User.findOneAndUpdate(
+  //       { token },
+  //       {
+  //         avatar: userData.data.avatar,
+  //         name: userData.data.name,
+  //         email: userData.data.email,
+  //         balance: user.balance,
+  //       },
+  //     );
+  //   };
+  //   if (!user) {
+  //     await User.create({
   //       avatar: userData.data.avatar,
   //       name: userData.data.name,
   //       email: userData.data.email,
   //       balance: user.balance,
-  //     },
+  //     });
+  //     await createToken(user._id);
+  //   } else {
+  //     await createToken(user._id);
+  //   }
+
+  //   return res.redirect(
+  //     `${BASE_URL}/api/auth/google-redirect/?token=${token}&email=${user.email}&avatar=${user.avatar}&name=${user.name}`,
   //   );
   // };
-  // if (!user) {
-  //   await User.create({
-  //     avatar: userData.data.avatar,
-  //     name: userData.data.name,
-  //     email: userData.data.email,
-  //     balance: user.balance,
-  //   });
-  //   await createToken(user._id);
-  // } else {
-  //   await createToken(user._id);
-  // }
-
-  // return res.redirect(
-  //   `${FRONTEND_URL}/api/auth/google-redirect/?access_token=${token}&email=${user.email}&avatar=${user.avatar}&name=${user.name}`,
-  // );
   const { name, email, avatar } = userData.data;
   let possiblUser;
   const user = await User.findOne({ email });
@@ -97,13 +98,18 @@ const googleRedirect = async (req, res) => {
     possiblUser = user;
   }
 
-  const token = possiblUser.createToken();
+  const { _id: id } = user;
+  const payload = { id };
+
+  const token = jwt.sign(payload, SECRET_KEY, {
+    expiresIn: '14d',
+  });
+  await possiblUser.token();
+
   await User.findByIdAndUpdate(possiblUser._id, { token });
 
   return res.redirect(
-    `${FRONTEND_URL}/api/auth/google-redirect/?access_token=${token}&email=${email}&name=${name}&avatar=${avatar}`,
+    `${BASE_URL}/api/auth/google-redirect/?access_token=${token}&email=${email}&name=${name}&avatar=${avatar}`,
   );
 };
-
-module.exports = googleLogin;
-module.exports = googleRedirect;
+module.exports = { googleLogin, googleRedirect };
