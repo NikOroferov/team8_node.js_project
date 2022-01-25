@@ -28,7 +28,7 @@ const getReportByMonthCategories = async (req, res) => {
         subcategory: 1,
         alias: 1,
         owner: 1,
-        icon: 1
+        icon: 1,
       },
     },
     {
@@ -48,33 +48,38 @@ const getReportByMonthCategories = async (req, res) => {
           $first: '$alias',
         },
         icon: {
-          $first: '$icon'
-      }
+          $first: '$icon',
+        },
       },
     },
     {
       $sort: {
-          totalInCategory: -1
-      }
+        totalInCategory: -1,
+      },
     },
     {
       $project: {
-          id: '$alias',
-          icon: 1,
-          totalInCategory: 1,
-          category_title: '$_id',
-          category: '$alias',
-          _id: 0
-      }
-  }
+        id: '$alias',
+        icon: 1,
+        totalInCategory: 1,
+        category_title: '$_id',
+        category: '$alias',
+        _id: 0,
+      },
+    },
   ];
-  
+
   const foundFirstTransactionByUser = [
     {
-        $match: {
-          owner: ObjectId(id),
-        },
+      $match: {
+        owner: ObjectId(id),
       },
+    },
+    {
+      $sort: {
+        createdDate: 1,
+      },
+    },
     {
       $group: {
         _id: '$owner',
@@ -85,17 +90,19 @@ const getReportByMonthCategories = async (req, res) => {
     },
     {
       $project: {
-          date: {
-              $dateToString: {
-                  format: '%Y%m',
-                  date: '$firstAdd'
-              }
-          }
-      }
-    }
+        firstAdd: {
+          $dateToString: {
+            format: '%Y%m',
+            date: '$firstAdd',
+          },
+        },
+      },
+    },
   ];
 
-  const result = await Transaction.aggregate([sortTransactionByCategoryByMonth]);
+  const result = await Transaction.aggregate([
+    sortTransactionByCategoryByMonth,
+  ]);
 
   const firstDate = await Transaction.aggregate([foundFirstTransactionByUser]);
 
