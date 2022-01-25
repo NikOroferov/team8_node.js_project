@@ -40,11 +40,10 @@ const getTotalReportByMonth = async (req, res) => {
       },
     },
     {
-      $project: {
-        total: 1,
-        transactionType: 1,
-      },
-    },
+      $sort: {
+        transactionType: -1
+      }
+    }
   ];
 
   const result = await Transaction.aggregate([agg]);
