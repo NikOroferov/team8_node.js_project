@@ -30,9 +30,9 @@ const transactionSchema = Schema({
     required: true,
     enum: ['расход', 'доход'],
   },
-  created_at: {
+  createdDate: {
     type: Date,
-    default: Date.now(),
+    default: new Date().toISOString(),
   },
   costs: {
     type: Number,
@@ -59,7 +59,7 @@ const transactionSchema = Schema({
 });
 
 const joiTransactionSchema = Joi.object({
-  created_at: Joi.string().required(),
+  createdDate: Joi.string(),
   category: Joi.string().required(),
   transactionType: Joi.string().required(),
   subcategory: Joi.string().required(),

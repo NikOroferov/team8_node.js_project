@@ -7,13 +7,13 @@ const getTotalReportByMonth = async (req, res) => {
 
   const { date = '202201' } = req.query;
 
-  const agg = [
+  const totalReportByIncomes = [
     {
       $project: {
         period: {
           $dateToString: {
             format: '%Y%m',
-            date: '$created_at',
+            date: '$createdDate',
           },
         },
         costs: 1,
@@ -46,7 +46,7 @@ const getTotalReportByMonth = async (req, res) => {
     }
   ];
 
-  const result = await Transaction.aggregate([agg]);
+  const result = await Transaction.aggregate([totalReportByIncomes]);
 
   res.json({
     status: 'success',

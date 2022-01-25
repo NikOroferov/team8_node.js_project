@@ -16,15 +16,15 @@ const deleteTransaction = async (req, res) => {
   }
 
   const {incomes , costs } = transaction;
-  const updateBalance = incomes === false ? balance + costs : balance - costs;
+  const updatedBalance = incomes === false ? balance + costs : balance - costs;
 
-  if (updateBalance < 0) {
+  if (updatedBalance < 0) {
     throw new BadRequest('There are no enough money for this purchase');
   }
 
   await User.findByIdAndUpdate(
     { _id },
-    { balance: updateBalance }
+    { balance: updatedBalance }
   );
 
   res.status(201).json({
@@ -32,7 +32,7 @@ const deleteTransaction = async (req, res) => {
     code: 201,
     data: {
       message: 'Success remove',
-      balance: updateBalance,
+      balance: updatedBalance,
     },
   });
 };

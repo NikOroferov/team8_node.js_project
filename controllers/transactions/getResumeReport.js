@@ -21,7 +21,7 @@ const getResumeReport = async (req, res) => {
       new Date().getDate()
   ).toISOString();
 
-  const agg = [
+  const allTransactionLastSixMonth = [
     {
       $match: {
         incomes: isIncome,
@@ -30,7 +30,7 @@ const getResumeReport = async (req, res) => {
     },
     {
       $match: {
-        created_at: {
+        createdDate: {
           $gte: new Date(sixMonthAgo),
           $lt: new Date(dateToday),
         },
@@ -40,7 +40,7 @@ const getResumeReport = async (req, res) => {
       $group: {
         _id: {
           month: {
-            $month: '$created_at',
+            $month: '$createdDate',
           },
         },
         total: {
@@ -71,7 +71,7 @@ const getResumeReport = async (req, res) => {
     },
   ];
 
-  const result = await Transaction.aggregate([agg]);
+  const result = await Transaction.aggregate([allTransactionLastSixMonth]);
 
   res.json({
     status: 'success',
