@@ -1,7 +1,6 @@
 const queryString = require('query-string');
 const axios = require('axios');
 const jwt = require('jsonwebtoken');
-// const gravatar = require('gravatar');
 const bcrypt = require('bcrypt');
 const { nanoid } = require('nanoid');
 const { User } = require('../../models');
@@ -29,6 +28,7 @@ const googleLogin = async (req, res) => {
     `https://accounts.google.com/o/oauth2/v2/auth?${stringifiedParams}`,
   );
 };
+
 const googleRedirect = async (req, res) => {
   const fullUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
   const urlObj = new URL(fullUrl);
@@ -58,7 +58,7 @@ const googleRedirect = async (req, res) => {
   const name = userData.data.name;
   const avatar = userData.data.avatar;
 
-  const user = await User.findUserByEmail(email);
+  const user = await User.findOne({ email });
   if (!user) {
     const password = nanoid();
     const hashPassword = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
