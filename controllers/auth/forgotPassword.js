@@ -2,6 +2,7 @@ const { User } = require('../../models');
 const { Unauthorized } = require('http-errors');
 const sha256 = require('sha256');
 const sgMail = require('@sendgrid/mail');
+const bcrypt = require('bcryptjs');
 require('dotenv').config();
 
 const { SENDGRID_API_KEY, SECRET_KEY, Email } = process.env;
@@ -19,7 +20,7 @@ const forgotPassword = async (req, res) => {
     throw new Unauthorized(`No user with email '${email}' found`);
   }
   const password = sha256(Date.now() + SECRET_KEY);
-  user.password = password;
+  user.password = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
 
   await user.save();
 
