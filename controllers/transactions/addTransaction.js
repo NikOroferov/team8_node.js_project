@@ -9,26 +9,20 @@ const addTransaction = async (req, res) => {
   const { createdDate, subcategory, category, transactionType, costs, incomes, year, month, day } =
   req.body;
 
-
-  const formattedCosts = costs.toFixed(2);
-  const formattedCategory = category.toLowerCase();
-  const formattedSubcategory = subcategory.toLowerCase();
-
-
-  const categoryInfo = await Category.findOne({ formattedCategory });
+  const categoryInfo = await Category.findOne({ category });
 
   if (!categoryInfo) {
     throw new NotFound('Category is not found');
   }
-
+console.log(categoryInfo);
   const { alias, icon } = categoryInfo;
 
   const newTransaction = {
     createdDate,
-    subcategory: formattedSubcategory,
-    category: formattedCategory,
+    subcategory,
+    category,
     transactionType,
-    costs: formattedCosts,
+    costs,
     incomes,
     alias,
     icon,
