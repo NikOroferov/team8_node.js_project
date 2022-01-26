@@ -1,9 +1,8 @@
 {
   "name": "team8_node.js_project",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
   "scripts": {
+    "test": "jest",
     "start": "cross-env NODE_ENV=production node ./bin/server.js",
     "start:dev": "cross-env NODE_ENV=development nodemon ./bin/server.js",
     "lint": "eslint **/*.js",
@@ -21,16 +20,42 @@
   },
   "homepage": "https://github.com/NikOroferov/team8_node.js_project#readme",
   "dependencies": {
+    "@sendgrid/mail": "^7.6.0",
+    "axios": "^0.25.0",
     "bcrypt": "^5.0.1",
+    "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
+    "cross-env": "7.0.3",
     "dotenv": "^11.0.0",
+    "ejs": "^3.1.6",
     "express": "^4.17.2",
+    "express-session": "^1.17.2",
+    "google-auth-library": "^7.11.0",
+    "googleapis": "^92.0.0",
+    "gravatar": "^1.8.2",
     "http-errors": "^2.0.0",
+    "jimp": "^0.16.1",
     "joi": "^17.5.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.1.6",
     "morgan": "^1.10.0",
     "multer": "^1.4.4",
-    "nodemon": "^2.0.15"
+    "nanoid": "^3.1.30",
+    "passport": "^0.5.2",
+    "passport-google-oauth": "^2.0.0",
+    "promises": "^0.2.5",
+    "query-string": "^7.1.0",
+    "sha256": "^0.2.0",
+    "swagger-ui-express": "^4.1.6"
+  },
+  "devDependencies": {
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-config-standard": "^16.0.2",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "jest": "^27.4.5",
+    "nodemon": "2.0.15"
   }
 }
