@@ -22,7 +22,7 @@ const login = async (req, res, next) => {
       );
     }
 
-    if (!(await bcrypt.compare(password, user.password))) {
+    if (!(await bcrypt.compareSync(password, user.password))) {
       throw new Unauthorized(`Wrong password`);
     }
     const payload = { id: user._id };
