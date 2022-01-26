@@ -56,7 +56,7 @@ const googleRedirect = async (req, res) => {
 
   const email = userData.data.email;
   const name = userData.data.name;
-  const avatar = userData.data.avatar;
+  const avatar = userData.data.picture;
 
   const user = await User.findOne({ email });
   if (!user) {
@@ -77,16 +77,20 @@ const googleRedirect = async (req, res) => {
     await User.findByIdAndUpdate(id, { token });
 
     return res.redirect(
-      `${FRONTEND_URL}/google-redirect/?token=${token}&email=${user.email}&avatar${user.avatar}&balance=${user.balance}&name=${user.name}`,
+      `${FRONTEND_URL}/google-redirect/?access_token=${user.token}&email=${user.email}&avatar=${user.avatar}&balance=${user.balance}&name=${user.name}`,
     );
   }
+
   const { id } = user;
   const payload = { id };
   const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '14d' });
   await User.findByIdAndUpdate(id, { token });
+  if (!avatar === userData.data.picture) {
+    User.findByIdAndUpdate(id, { avatar });
+  }
 
   return res.redirect(
-    `${FRONTEND_URL}/google-redirect/?token=${token}&email=${user.email}&avatar${user.avatar}&balance=${user.balance}&name=${user.name}`,
+    `${FRONTEND_URL}/google-redirect/?access_token=${user.token}&email=${user.email}&avatar=${user.avatar}&balance=${user.balance}&name=${user.name}`,
   );
 };
 
