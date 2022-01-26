@@ -14,7 +14,7 @@ const addTransaction = async (req, res) => {
   if (!categoryInfo) {
     throw new NotFound('Category is not found');
   }
-console.log(categoryInfo);
+
   const { alias, icon } = categoryInfo;
 
   const newTransaction = {
